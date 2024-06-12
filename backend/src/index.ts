@@ -6,6 +6,7 @@ import express, { Request, Response, Application } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { connect } from "mongoose";
+import { authRouter, recipeRouter } from "./route";
 
 const app: Application = express();
 
@@ -14,9 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 
-app.all("*", (req: Request, res: Response) => {
-  res.status(404).json({ message: "The route you requested is not found." });
-});
+app.use("/auth", authRouter);
+app.use("/recipe", recipeRouter);
 
 const runDB = async () => {
   connect(process.env.MONGODB_URI as string)
